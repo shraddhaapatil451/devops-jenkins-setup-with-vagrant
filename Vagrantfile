@@ -7,7 +7,9 @@ $script = <<ENDSCRIPT
   echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
   sudo apt upgrade -y
   sudo apt-get update -y
-  sudo apt-get install jenkins -y
+  # Upgrade init-system-helpers package to meet Jenkins' requirement
+  sudo apt-get install -y init-system-helpers
+  sudo apt-get install -y jenkins
   sudo systemctl enable jenkins
   sudo systemctl start jenkins
 ENDSCRIPT
@@ -26,5 +28,5 @@ Vagrant.configure("2") do |config|
       v.cpus = 2
     end
     jenkinsserver.vm.provision "shell", inline: $script
-end
+  end
 end
